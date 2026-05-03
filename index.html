@@ -1,178 +1,258 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>PDV Sorvetes</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de M3U</title>
+
+<!-- Fonte moderna -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
-*{touch-action:manipulation;}
-button,span{-webkit-user-select:none;-webkit-touch-callout:none;}
-
-body{
-font-family:Arial;background:#f2f2f7;padding:10px;max-width:480px;margin:auto;
-}
-h1{text-align:center;font-size:26px;font-weight:900;}
-.cat-btn{
-width:100%;padding:14px;margin-top:10px;font-size:18px;
-border:none;border-radius:12px;background:#007aff;color:white;font-weight:800;
-position:sticky;top:10px;z-index:10;
-}
-.cat-btn.ativo{background:#34c759;}
-.categoria{display:none;background:white;padding:10px;border-radius:12px;}
-.item{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:10px;background:#f9f9f9;border-radius:10px;}
-.nome{font-weight:800;}
-.valor{color:#007aff;font-weight:700;}
-.btn{width:34px;height:34px;border:none;border-radius:8px;font-size:22px;font-weight:900;}
-.resumo{margin-top:15px;background:white;padding:15px;border-radius:12px;font-size:18px;font-weight:800;}
-#pedido{margin-top:10px;font-size:14px;}
-#pedido div{display:flex;justify-content:space-between;}
-
-#limpar{
-width:50%;
-display:block;
-margin:12px auto;
-padding:10px;
-font-size:14px;
-background:#ff3b30;
-color:white;
-border:none;
-border-radius:10px;
-font-weight:700;
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    background: #0d1117;
+    color: #e4e6eb;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 40px 20px;
 }
 
-#popup{
-position:fixed;top:0;left:0;width:100%;height:100%;
-background:rgba(0,0,0,.8);display:none;justify-content:center;align-items:center;
-z-index:100;
+.panel {
+    width: 100%;
+    max-width: 700px;
+    background: #161b22;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    overflow: hidden;
 }
-#popupBox{
-background:white;padding:20px;border-radius:20px;text-align:center;
+
+.header {
+    background: linear-gradient(90deg, #0f766e, #22c55e);
+    padding: 25px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
 }
-#popupBox img{width:280px;}
-#fechar{margin-top:10px;padding:12px 20px;font-size:18px;border:none;border-radius:10px;background:#ff3b30;color:white;}
+
+.login {
+    padding: 20px 25px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.login input {
+    flex: 1 1 200px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: none;
+    background: #1f2937;
+    color: #fff;
+    font-size: 14px;
+}
+
+.login input:focus {
+    outline: 2px solid #22c55e;
+}
+
+.login button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    background: #22c55e;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login button:hover {
+    background: #16a34a;
+}
+
+#resultado {
+    padding: 20px 25px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.server {
+    background: #1b2029;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.server:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+.server-name {
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.server-link {
+    font-size: 12px;
+    word-break: break-all;
+    margin-bottom: 12px;
+    color: #cbd5e1;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.actions button {
+    flex: 1;
+    padding: 8px 0;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    border: none;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.copy {
+    background: #3b82f6;
+    color: #fff;
+}
+
+.copy:hover {
+    background: #2563eb;
+}
+
+.copy.copiado {
+    background: #22c55e;
+}
+
+.dns {
+    background: #f97316;
+    color: #fff;
+}
+
+.dns:hover {
+    background: #ea580c;
+}
+
+.testar {
+    width: 36px;
+    background: #475569;
+    color: #fff;
+    font-size: 16px;
+}
+
+.testar:hover {
+    background: #64748b;
+}
+
+@media(max-width: 600px){
+    #resultado {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
 </head>
-
 <body>
 
-<h1>📋 PEDIDOS</h1>
-<div id="conteudo"></div>
+<div class="panel">
+    <div class="header">Painel M3U</div>
 
-<div class="resumo">
-Total: R$ <span id="total">0.00</span>
+    <div class="login">
+        <input id="user" placeholder="Usuário">
+        <input id="pass" placeholder="Senha">
+        <button onclick="gerar()">Gerar Links</button>
+    </div>
 
-<button onclick="gerarPix()" style="width:100%;margin-top:10px;padding:18px;font-size:22px;background:#00e676;border:none;border-radius:12px;font-weight:900">💳 GERAR PIX</button>
-
-<button id="limpar" onclick="limparTudo()">Novo pedido</button>
-
-<div id="pedido"></div>
-</div>
-
-<div id="popup">
-<div id="popupBox">
-<h2>Valor: R$ <span id="valorPix"></span></h2>
-<div id="qr"></div>
-<button id="fechar" onclick="fechar()">Fechar</button>
-</div>
+    <div id="resultado"></div>
 </div>
 
 <script>
-let precoCat={FRUTARE:10,FRUTILLY:7.5};
-let precos={
-"Clássico":22.50,"Branco":22.50,"Avelã":22.50,"Amêndoas":22.50,"Cookies & Cream":22.50,"Menos Açúcar":22.50,"Pistache":22.50,
-"Choco Mix":14.50,"Chocante":14.50,"Uni Cornetto":17.5,"M&Ms":17.5,"Brigadeiro Cornetto":17.5,
-"Mini Eski-bon":18.50,"Mini Morango":18.50,"Mini Chicabon":18.50,"Mini Doce de Leite":18.50,
-"Eski-bon":13.50,"Brigadeiro":13,"Chicabon":13,"Chicabon Menos Açúcar":13,"3 Chocolates":13,"Max Avelã":13,"Tablito":13,
-"Expecto":10,"Grifinória":11,"Sonserina":11
-};
-let categorias={
-"MAGNUM":["Clássico","Branco","Avelã","Amêndoas","Cookies & Cream","Menos Açúcar","Pistache"],
-"CORNETTO":["Choco Mix","Chocante","Uni Cornetto","M&Ms","Brigadeiro Cornetto"],
-"OS FAVORITOS":["Mini Eski-bon","Mini Morango","Mini Chicabon","Mini Doce de Leite","Eski-bon","Brigadeiro","Chicabon","Chicabon Menos Açúcar","3 Chocolates","Max Avelã","Tablito"],
-"FRUTARE":["Tangerina","Limão","Morango","Abacaxi","Uva","Coco"],
-"FRUTILLY":["Frutilly","Frutilly Pinta Língua"],
-"HARRY POTTER":["Expecto","Grifinória","Sonserina"]
+const servidores = [
+{nome:"Galaxy", url:"http://x25.acxll.shop"},
+{nome:"Seven", url:"http://sev.ontv.fun"},
+{nome:"Explosion", url:"http://mainxs.site:80"},
+{nome:"Lunar", url:"http://prd.blc-atena.com"},
+{nome:"Speed", url:"http://spd.blc-atena.com"},
+{nome:"Sky", url:"http://atbx.blc-atena.com"},
+{nome:"Solar", url:"http://solar.playblc.work"},
+{nome:"Urano", url:"http://od.blc-atena.com"},
+{nome:"Atena", url:"http://atn.blc-atena.com"},
+{nome:"Andromeda", url:"http://mplay.run"},
+{nome:"Venus", url:"http://ntb.blc-atena.com"},
+{nome:"Fire", url:"http://ecps.blc-atena.com"}
+];
+
+function gerar(){
+let user = document.getElementById("user").value;
+let pass = document.getElementById("pass").value;
+
+if(!user || !pass){
+alert("Preencha usuário e senha");
+return;
+}
+
+let resultado = document.getElementById("resultado");
+resultado.innerHTML = "";
+
+servidores.forEach((s,i)=>{
+let link = `${s.url}/get.php?username=${user}&password=${pass}&type=m3u_plus&output=mpegts`;
+
+let div = document.createElement("div");
+div.className = "server";
+
+div.innerHTML = `
+<div class="server-name">${s.nome}</div>
+<div class="server-link">${link}</div>
+<div class="actions">
+<button id="m3u${i}" class="copy">Copiar</button>
+<button id="dns${i}" class="dns">DNS</button>
+<button class="testar" onclick="testar('${s.url}')">↗</button>
+</div>
+`;
+
+resultado.appendChild(div);
+
+// copiar M3U
+document.getElementById(`m3u${i}`).onclick = function(){
+navigator.clipboard.writeText(link);
+this.innerText = "Copiado";
+this.classList.add("copiado");
+setTimeout(()=>{
+this.innerText = "Copiar";
+this.classList.remove("copiado");
+},2000);
 };
 
-let id=1,total=0,aberta=null;
-
-for(let c in categorias){
-conteudo.innerHTML+=`<button class="cat-btn" id="btn_${c}" onclick="toggle('${c}')">${c}</button><div id="cat_${c}" class="categoria"></div>`;
-categorias[c].forEach(s=>{
-let p=precoCat[c]??precos[s];
-document.getElementById("cat_"+c).innerHTML+=`
-<div class="item">
-<div><div class="nome">${s}</div><div class="valor">R$ ${p.toFixed(2)}</div></div>
-<div><button class="btn" onclick="rem(${id})">-</button> <span id="q_${id}">0</span> <button class="btn" onclick="add(${id})">+</button></div>
-</div>`;id++;
+// copiar DNS
+document.getElementById(`dns${i}`).onclick = function(){
+navigator.clipboard.writeText(s.url);
+this.innerText = "Copiado";
+this.classList.add("copiado");
+setTimeout(()=>{
+this.innerText = "DNS";
+this.classList.remove("copiado");
+},2000);
+};
 });
 }
 
-function toggle(c){
-document.querySelectorAll(".categoria").forEach(e=>e.style.display="none");
-document.querySelectorAll(".cat-btn").forEach(b=>b.classList.remove("ativo"));
-if(aberta!==c){
-document.getElementById("cat_"+c).style.display="block";
-document.getElementById("btn_"+c).classList.add("ativo");
-aberta=c;
-}else aberta=null;
-}
-
-function add(i){q("q_"+i).innerText++;calc();}
-function rem(i){let e=q("q_"+i);if(e.innerText>0)e.innerText--;calc();}
-function q(id){return document.getElementById(id);}
-
-function calc(){
-let i=1;total=0;let resumo={};
-for(let c in categorias){
-categorias[c].forEach(s=>{
-let p=precoCat[c]??precos[s];
-let qtd=q("q_"+i).innerText;
-if(qtd>0) resumo[s]={qtd,sub:(qtd*p)};
-total+=qtd*p;i++;
-});
-}
-q("total").innerText=total.toFixed(2);
-let txt="";
-for(let k in resumo) txt+=`<div><span>${resumo[k].qtd}x ${k}</span><span>R$ ${resumo[k].sub.toFixed(2)}</span></div>`;
-q("pedido").innerHTML=txt;
-}
-
-const pixBase="00020101021126330014br.gov.bcb.pix0111377793998695204000053039865802BR5925ZAYAN DOUX DE SOUZA OLIVE6009SAO PAULO622905251KHPGDNVGBS01VTEG5JDK7R2S6304";
-
-function gerarPix(){
-if(total<=0){alert("Selecione itens");return;}
-let valor=total.toFixed(2);
-let tam=valor.length.toString().padStart(2,"0");
-let payload=pixBase.replace("5802BR","54"+tam+valor+"5802BR");
-let crc=crc16(payload);
-let pix=payload+crc;
-q("valorPix").innerText=valor;
-q("qr").innerHTML="<img src='https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="+encodeURIComponent(pix)+"'>";
-q("popup").style.display="flex";
-}
-
-function fechar(){q("popup").style.display="none";}
-
-function limparTudo(){
-    if(!confirm("Deseja apagar este pedido e iniciar um novo?")) return;
-    document.querySelectorAll("[id^='q_']").forEach(e=>e.innerText="0");
-    q("total").innerText="0.00";
-    q("pedido").innerHTML="";
-    q("qr").innerHTML="";
-    fechar();
-}
-
-function crc16(s){
-let crc=0xFFFF;
-for(let i=0;i<s.length;i++){
-crc^=s.charCodeAt(i)<<8;
-for(let j=0;j<8;j++){
-crc=(crc&0x8000)?(crc<<1)^0x1021:crc<<1;
-crc&=0xFFFF;
-}}
-return crc.toString(16).toUpperCase().padStart(4,"0");
+function testar(url){
+window.open(url, "_blank");
 }
 </script>
 
