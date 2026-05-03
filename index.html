@@ -149,6 +149,10 @@ body {
     background: #ea580c;
 }
 
+.dns.copiado {
+    background: #22c55e;
+}
+
 .testar {
     width: 36px;
     background: #475569;
@@ -227,26 +231,18 @@ div.innerHTML = `
 
 resultado.appendChild(div);
 
-// copiar M3U
+// copiar M3U (permanente)
 document.getElementById(`m3u${i}`).onclick = function(){
 navigator.clipboard.writeText(link);
 this.innerText = "Copiado";
 this.classList.add("copiado");
-setTimeout(()=>{
-this.innerText = "Copiar";
-this.classList.remove("copiado");
-},2000);
 };
 
-// copiar DNS
+// copiar DNS (permanente)
 document.getElementById(`dns${i}`).onclick = function(){
 navigator.clipboard.writeText(s.url);
 this.innerText = "Copiado";
 this.classList.add("copiado");
-setTimeout(()=>{
-this.innerText = "DNS";
-this.classList.remove("copiado");
-},2000);
 };
 });
 }
