@@ -1,295 +1,106 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador de M3U HUD Sci-Fi</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste IPTV</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-<style>
-body {
-    margin: 0;
-    padding: 0;
-    background: radial-gradient(circle at center, #0a0f1a 0%, #000000 100%);
-    font-family: 'Roboto', sans-serif;
-    color: #e0e0e0;
-    display: flex;
-    justify-content: center;
-    padding: 40px 20px;
-    overflow-x: hidden;
-}
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
 
-/* Painel principal */
-.panel {
-    position: relative;
-    width: 100%;
-    max-width: 750px;
-    background: rgba(15, 19, 32, 0.95);
-    border-radius: 20px;
-    overflow: hidden;
-    border: 2px solid #16f09e;
-    box-shadow: 0 0 50px rgba(34, 255, 150, 0.6), 0 0 30px rgba(59, 130, 246, 0.3);
-}
+    h1 {
+      margin-bottom: 20px;
+    }
 
-/* Partículas animadas */
-.particles {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 0;
-}
+    input {
+      width: 80%;
+      max-width: 700px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
 
-.particles span {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: #22ff9e;
-    opacity: 0.3;
-    border-radius: 50%;
-    animation: floatParticles linear infinite;
-}
+    button {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 10px;
+      background: #00b894;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
 
-@keyframes floatParticles {
-    0% { transform: translateY(0) translateX(0); opacity: 0.3; }
-    50% { opacity: 0.6; }
-    100% { transform: translateY(-600px) translateX(20px); opacity: 0; }
-}
+    button:hover {
+      opacity: 0.9;
+    }
 
-/* Cabeçalho */
-.header {
-    position: relative;
-    background: linear-gradient(90deg, #0fffa3, #22c55e);
-    color: #0a0f1a;
-    font-family: 'Orbitron', sans-serif;
-    text-align: center;
-    font-size: 30px;
-    font-weight: 700;
-    padding: 25px;
-    text-shadow: 0 0 10px #22c55e, 0 0 20px #0fffa3;
-    z-index: 1;
-}
-
-/* Login */
-.login {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    padding: 20px 25px;
-    justify-content: center;
-    position: relative;
-    z-index: 1;
-}
-
-.login input {
-    flex: 1 1 200px;
-    padding: 14px 18px;
-    border-radius: 12px;
-    border: 1px solid #22c55e;
-    background: #0f1320;
-    color: #e0e0e0;
-    font-size: 15px;
-    transition: 0.3s;
-}
-
-.login input:focus {
-    outline: none;
-    box-shadow: 0 0 15px #22ff9e;
-    border-color: #22ff9e;
-}
-
-.login button {
-    padding: 14px 20px;
-    border-radius: 12px;
-    border: none;
-    background: #22c55e;
-    color: #0a0f1a;
-    font-weight: 700;
-    font-family: 'Orbitron', sans-serif;
-    cursor: pointer;
-    text-transform: uppercase;
-    box-shadow: 0 0 15px #22ff9e;
-    transition: transform 0.2s;
-}
-
-.login button:hover {
-    transform: translateY(-2px);
-}
-
-/* Grid de resultados */
-#resultado {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    padding: 20px 25px 30px 25px;
-    position: relative;
-    z-index: 1;
-}
-
-/* Cards dos servidores */
-.server {
-    position: relative;
-    background: rgba(10,15,26,0.95);
-    border: 2px solid #22ff9e;
-    border-radius: 15px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    box-shadow: 0 0 20px rgba(34,255,150,0.5), 0 0 15px rgba(59,130,246,0.3);
-}
-
-/* Barra de energia contínua */
-.energy-bar {
-    height: 5px;
-    width: 100%;
-    border-radius: 5px;
-    background: linear-gradient(270deg, #0fffa3, #22ff9e, #0fffa3);
-    background-size: 200% 100%;
-    margin-bottom: 10px;
-    animation: wave 4s linear infinite;
-}
-
-@keyframes wave {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 200% 0%; }
-}
-
-.server-name {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 700;
-    font-size: 20px;
-    color: #22ff9e;
-    margin-bottom: 10px;
-}
-
-.server-link {
-    font-size: 12px;
-    word-break: break-all;
-    color: #c0f9de;
-    margin-bottom: 12px;
-}
-
-.actions {
-    display: flex;
-    gap: 10px;
-}
-
-.actions button {
-    flex: 1;
-    padding: 10px 0;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    text-transform: uppercase;
-}
-
-/* Botões estáticos */
-.copy { background: #3b82f6; color: #fff; }
-.copy.copiado { background: #22ff9e; color: #0a0f1a; }
-.dns { background: #f97316; color: #fff; }
-.dns.copiado { background: #22ff9e; color: #0a0f1a; }
-.testar { background: #475569; color: #fff; font-size:16px; width:36px; }
-
-@media(max-width: 650px){
-    #resultado { grid-template-columns: 1fr; }
-}
-</style>
+    video {
+      width: 90%;
+      max-width: 1000px;
+      border-radius: 15px;
+      background: black;
+    }
+  </style>
 </head>
 <body>
 
-<div class="panel">
-    <div class="particles" id="particles"></div>
-    <div class="header">Gerador de M3U HUD Sci-Fi</div>
+  <h1>Player IPTV Teste</h1>
 
-    <div class="login">
-        <input id="user" placeholder="Usuário">
-        <input id="pass" placeholder="Senha">
-        <button onclick="gerar()">Gerar Links</button>
-    </div>
+  <input 
+    type="text" 
+    id="m3u8" 
+    placeholder="Cole aqui seu link .m3u8"
+  >
 
-    <div id="resultado"></div>
-</div>
+  <button onclick="carregarVideo()">
+    Reproduzir
+  </button>
 
-<script>
-// Criar partículas
-const particlesContainer = document.getElementById('particles');
-for(let i=0; i<80; i++){
-    let p = document.createElement('span');
-    p.style.left = Math.random() * 100 + '%';
-    p.style.top = Math.random() * 100 + '%';
-    p.style.width = Math.random()*3 + 1 + 'px';
-    p.style.height = p.style.width;
-    p.style.animationDuration = (5 + Math.random()*5) + 's';
-    p.style.opacity = Math.random() * 0.5 + 0.2;
-    particlesContainer.appendChild(p);
-}
+  <video id="video" controls autoplay></video>
 
-// Servidores
-const servidores = [
-{nome:"🛸 Galaxy 🛸", url:"http://x25.acxll.shop"},
-{nome:"🧿 Seven 🧿", url:"http://sev.ontv.fun"},
-{nome:"💣 Explosion 💣", url:"http://mainxs.site:80"},
-{nome:"🌑 Lunar 🌑", url:"http://prd.blc-atena.com"},
-{nome:"⚡ Speed ⚡", url:"http://spd.blc-atena.com"},
-{nome:"📡 Sky 📡", url:"http://atbx.blc-atena.com"},
-{nome:"☀️ Solar ☀️", url:"http://solar.playblc.work"},
-{nome:"🪐 Urano 🪐", url:"http://od.blc-atena.com"},
-{nome:"🏛️ Atena 🏛️", url:"http://atn.blc-atena.com"},
-{nome:"☄️ Andromeda ☄️", url:"http://mplay.run"},
-{nome:"🌬️ Venus 🌬️", url:"http://ntb.blc-atena.com"},
-{nome:"🔥 Fire 🔥", url:"http://ecps.blc-atena.com"}
-];
+  <script>
+    function carregarVideo() {
 
-function gerar(){
-    let user = document.getElementById("user").value;
-    let pass = document.getElementById("pass").value;
+      const video = document.getElementById('video');
+      const url = document.getElementById('m3u8').value;
 
-    if(!user || !pass){
-        alert("Preencha usuário e senha");
-        return;
+      if (Hls.isSupported()) {
+
+        const hls = new Hls();
+
+        hls.loadSource(url);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+          video.play();
+        });
+
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+
+        video.src = url;
+        video.addEventListener('loadedmetadata', function () {
+          video.play();
+        });
+
+      } else {
+        alert('Seu navegador não suporta HLS.');
+      }
     }
-
-    let resultado = document.getElementById("resultado");
-    resultado.innerHTML = "";
-
-    servidores.forEach((s,i)=>{
-        let link = `${s.url}/get.php?username=${user}&password=${pass}&type=m3u_plus&output=mpegts`;
-
-        let div = document.createElement("div");
-        div.className = "server";
-        div.innerHTML = `
-            <div class="energy-bar"></div>
-            <div class="server-name">${s.nome}</div>
-            <div class="server-link">${link}</div>
-            <div class="actions">
-                <button id="m3u${i}" class="copy">Copiar</button>
-                <button id="dns${i}" class="dns">DNS</button>
-                <button class="testar" onclick="testar('${s.url}')">↗</button>
-            </div>
-        `;
-        resultado.appendChild(div);
-
-        document.getElementById(`m3u${i}`).onclick = function(){
-            navigator.clipboard.writeText(link);
-            this.innerText = "Copiado";
-            this.classList.add("copiado");
-        };
-
-        document.getElementById(`dns${i}`).onclick = function(){
-            navigator.clipboard.writeText(s.url);
-            this.innerText = "Copiado";
-            this.classList.add("copiado");
-        };
-    });
-}
-
-function testar(url){ window.open(url, "_blank"); }
-</script>
+  </script>
 
 </body>
 </html>
