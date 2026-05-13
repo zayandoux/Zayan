@@ -3,66 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IPTV Player</title>
+
+<title>IPTV Local</title>
 
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 <style>
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
 body{
+  margin:0;
   background:#111;
   color:white;
   font-family:Arial;
-  overflow:hidden;
 }
 
 header{
-  background:#1c1c1c;
   padding:15px;
-  display:flex;
-  gap:10px;
+  background:#1c1c1c;
 }
 
 input{
-  flex:1;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  font-size:15px;
-}
-
-button{
-  padding:12px 20px;
-  border:none;
-  border-radius:10px;
-  background:#00b894;
-  color:white;
-  cursor:pointer;
-  font-weight:bold;
+  padding:10px;
 }
 
 .container{
   display:flex;
-  height:calc(100vh - 70px);
+  height:90vh;
 }
 
 .sidebar{
   width:250px;
+  overflow:auto;
   background:#181818;
-  overflow-y:auto;
-  border-right:1px solid #333;
 }
 
 .category{
   padding:15px;
-  cursor:pointer;
   border-bottom:1px solid #222;
+  cursor:pointer;
 }
 
 .category:hover{
@@ -75,52 +53,36 @@ button{
   flex-direction:column;
 }
 
-.video-container{
-  background:black;
-  height:45%;
-}
-
 video{
   width:100%;
-  height:100%;
+  height:45%;
   background:black;
 }
 
 .channels{
   flex:1;
-  overflow-y:auto;
-  padding:15px;
+  overflow:auto;
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:15px;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:10px;
+  padding:10px;
 }
 
 .card{
-  background:#1d1d1d;
-  border-radius:15px;
+  background:#1f1f1f;
+  border-radius:10px;
   overflow:hidden;
   cursor:pointer;
-  transition:0.2s;
-}
-
-.card:hover{
-  transform:scale(1.03);
 }
 
 .card img{
   width:100%;
-  height:140px;
+  height:120px;
   object-fit:cover;
-  background:#333;
 }
 
 .card-title{
   padding:10px;
-  font-size:14px;
-}
-
-.loading{
-  padding:20px;
 }
 
 </style>
@@ -129,34 +91,19 @@ video{
 
 <header>
 
-<input
-type="text"
-id="m3uUrl"
-placeholder="Cole a URL da playlist M3U"
->
-
-<button onclick="loadM3U()">
-Carregar
-</button>
+<input type="file" id="fileInput">
 
 </header>
 
 <div class="container">
 
-<div class="sidebar" id="categories">
-</div>
+<div class="sidebar" id="categories"></div>
 
 <div class="content">
 
-<div class="video-container">
 <video id="video" controls autoplay></video>
-</div>
 
-<div class="channels" id="channels">
-<div class="loading">
-Carregue uma playlist IPTV
-</div>
-</div>
+<div class="channels" id="channels"></div>
 
 </div>
 
@@ -164,46 +111,50 @@ Carregue uma playlist IPTV
 
 <script>
 
-let channels = [];
 let grouped = {};
 
-async function loadM3U(){
+document
+.getElementById("fileInput")
+.addEventListener("change", function(e){
 
-  const url = document.getElementById("m3uUrl").value;
+  const file = e.target.files[0];
 
-  const response = await fetch(url);
-  const text = await response.text();
+  const reader = new FileReader();
 
-  parseM3U(text);
+  reader.onload = function(event){
 
-}
+    parseM3U(event.target.result);
+
+  };
+
+  reader.readAsText(file);
+
+});
 
 function parseM3U(data){
 
-  channels = [];
   grouped = {};
 
-  const lines = data.split("\n");
+  const lines = data.split('\n');
 
   let current = {};
 
-  for(let line of lines){
+  lines.forEach(line => {
 
     line = line.trim();
 
     if(line.startsWith("#EXTINF")){
 
-      const nameMatch = line.split(",");
-
-      const title = nameMatch[nameMatch.length - 1];
+      const title = line.split(',').pop();
 
       const logoMatch = line.match(/tvg-logo="(.*?)"/);
+
       const groupMatch = line.match(/group-title="(.*?)"/);
 
       current = {
-        title: title || "Sem nome",
-        logo: logoMatch ? logoMatch[1] : "",
-        category: groupMatch ? groupMatch[1] : "Outros"
+        title:title,
+        logo:logoMatch ? logoMatch[1] : '',
+        category:groupMatch ? groupMatch[1] : 'Outros'
       };
 
     }
@@ -212,17 +163,15 @@ function parseM3U(data){
 
       current.url = line;
 
-      channels.push(current);
-
       if(!grouped[current.category]){
         grouped[current.category] = [];
       }
 
-      grouped[current.category].push(current);
+      grouped[current.category].push({...current});
 
     }
 
-  }
+  });
 
   renderCategories();
 
@@ -230,9 +179,9 @@ function parseM3U(data){
 
 function renderCategories(){
 
-  const categoriesDiv = document.getElementById("categories");
+  const categories = document.getElementById("categories");
 
-  categoriesDiv.innerHTML = "";
+  categories.innerHTML = "";
 
   Object.keys(grouped).forEach(category => {
 
@@ -244,7 +193,7 @@ function renderCategories(){
 
     div.onclick = () => renderChannels(category);
 
-    categoriesDiv.appendChild(div);
+    categories.appendChild(div);
 
   });
 
@@ -252,9 +201,9 @@ function renderCategories(){
 
 function renderChannels(category){
 
-  const channelsDiv = document.getElementById("channels");
+  const channels = document.getElementById("channels");
 
-  channelsDiv.innerHTML = "";
+  channels.innerHTML = "";
 
   grouped[category].forEach(item => {
 
@@ -263,13 +212,13 @@ function renderChannels(category){
     card.className = "card";
 
     card.innerHTML = `
-      <img src="${item.logo || 'https://via.placeholder.com/300x140'}">
+      <img src="${item.logo || 'https://via.placeholder.com/300x120'}">
       <div class="card-title">${item.title}</div>
     `;
 
     card.onclick = () => playVideo(item.url);
 
-    channelsDiv.appendChild(card);
+    channels.appendChild(card);
 
   });
 
@@ -287,17 +236,11 @@ function playVideo(url){
 
     hls.attachMedia(video);
 
-    hls.on(Hls.Events.MANIFEST_PARSED,function(){
-      video.play();
-    });
-
   }
 
-  else if(video.canPlayType('application/vnd.apple.mpegurl')){
+  else{
 
     video.src = url;
-
-    video.play();
 
   }
 
