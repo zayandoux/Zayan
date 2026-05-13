@@ -1,106 +1,309 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teste IPTV</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPTV Player</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-  <style>
-    body {
-      margin: 0;
-      background: #111;
-      color: white;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
+<style>
 
-    h1 {
-      margin-bottom: 20px;
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-    input {
-      width: 80%;
-      max-width: 700px;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      margin-bottom: 15px;
-      font-size: 16px;
-    }
+body{
+  background:#111;
+  color:white;
+  font-family:Arial;
+  overflow:hidden;
+}
 
-    button {
-      padding: 12px 25px;
-      border: none;
-      border-radius: 10px;
-      background: #00b894;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      margin-bottom: 20px;
-    }
+header{
+  background:#1c1c1c;
+  padding:15px;
+  display:flex;
+  gap:10px;
+}
 
-    button:hover {
-      opacity: 0.9;
-    }
+input{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-size:15px;
+}
 
-    video {
-      width: 90%;
-      max-width: 1000px;
-      border-radius: 15px;
-      background: black;
-    }
-  </style>
+button{
+  padding:12px 20px;
+  border:none;
+  border-radius:10px;
+  background:#00b894;
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.container{
+  display:flex;
+  height:calc(100vh - 70px);
+}
+
+.sidebar{
+  width:250px;
+  background:#181818;
+  overflow-y:auto;
+  border-right:1px solid #333;
+}
+
+.category{
+  padding:15px;
+  cursor:pointer;
+  border-bottom:1px solid #222;
+}
+
+.category:hover{
+  background:#222;
+}
+
+.content{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+.video-container{
+  background:black;
+  height:45%;
+}
+
+video{
+  width:100%;
+  height:100%;
+  background:black;
+}
+
+.channels{
+  flex:1;
+  overflow-y:auto;
+  padding:15px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:15px;
+}
+
+.card{
+  background:#1d1d1d;
+  border-radius:15px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.card:hover{
+  transform:scale(1.03);
+}
+
+.card img{
+  width:100%;
+  height:140px;
+  object-fit:cover;
+  background:#333;
+}
+
+.card-title{
+  padding:10px;
+  font-size:14px;
+}
+
+.loading{
+  padding:20px;
+}
+
+</style>
 </head>
 <body>
 
-  <h1>Player IPTV Teste</h1>
+<header>
 
-  <input 
-    type="text" 
-    id="m3u8" 
-    placeholder="Cole aqui seu link .m3u8"
-  >
+<input
+type="text"
+id="m3uUrl"
+placeholder="Cole a URL da playlist M3U"
+>
 
-  <button onclick="carregarVideo()">
-    Reproduzir
-  </button>
+<button onclick="loadM3U()">
+Carregar
+</button>
 
-  <video id="video" controls autoplay></video>
+</header>
 
-  <script>
-    function carregarVideo() {
+<div class="container">
 
-      const video = document.getElementById('video');
-      const url = document.getElementById('m3u8').value;
+<div class="sidebar" id="categories">
+</div>
 
-      if (Hls.isSupported()) {
+<div class="content">
 
-        const hls = new Hls();
+<div class="video-container">
+<video id="video" controls autoplay></video>
+</div>
 
-        hls.loadSource(url);
-        hls.attachMedia(video);
+<div class="channels" id="channels">
+<div class="loading">
+Carregue uma playlist IPTV
+</div>
+</div>
 
-        hls.on(Hls.Events.MANIFEST_PARSED, function () {
-          video.play();
-        });
+</div>
 
-      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+</div>
 
-        video.src = url;
-        video.addEventListener('loadedmetadata', function () {
-          video.play();
-        });
+<script>
 
-      } else {
-        alert('Seu navegador não suporta HLS.');
-      }
+let channels = [];
+let grouped = {};
+
+async function loadM3U(){
+
+  const url = document.getElementById("m3uUrl").value;
+
+  const response = await fetch(url);
+  const text = await response.text();
+
+  parseM3U(text);
+
+}
+
+function parseM3U(data){
+
+  channels = [];
+  grouped = {};
+
+  const lines = data.split("\n");
+
+  let current = {};
+
+  for(let line of lines){
+
+    line = line.trim();
+
+    if(line.startsWith("#EXTINF")){
+
+      const nameMatch = line.split(",");
+
+      const title = nameMatch[nameMatch.length - 1];
+
+      const logoMatch = line.match(/tvg-logo="(.*?)"/);
+      const groupMatch = line.match(/group-title="(.*?)"/);
+
+      current = {
+        title: title || "Sem nome",
+        logo: logoMatch ? logoMatch[1] : "",
+        category: groupMatch ? groupMatch[1] : "Outros"
+      };
+
     }
-  </script>
+
+    else if(line.startsWith("http")){
+
+      current.url = line;
+
+      channels.push(current);
+
+      if(!grouped[current.category]){
+        grouped[current.category] = [];
+      }
+
+      grouped[current.category].push(current);
+
+    }
+
+  }
+
+  renderCategories();
+
+}
+
+function renderCategories(){
+
+  const categoriesDiv = document.getElementById("categories");
+
+  categoriesDiv.innerHTML = "";
+
+  Object.keys(grouped).forEach(category => {
+
+    const div = document.createElement("div");
+
+    div.className = "category";
+
+    div.innerText = category;
+
+    div.onclick = () => renderChannels(category);
+
+    categoriesDiv.appendChild(div);
+
+  });
+
+}
+
+function renderChannels(category){
+
+  const channelsDiv = document.getElementById("channels");
+
+  channelsDiv.innerHTML = "";
+
+  grouped[category].forEach(item => {
+
+    const card = document.createElement("div");
+
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="${item.logo || 'https://via.placeholder.com/300x140'}">
+      <div class="card-title">${item.title}</div>
+    `;
+
+    card.onclick = () => playVideo(item.url);
+
+    channelsDiv.appendChild(card);
+
+  });
+
+}
+
+function playVideo(url){
+
+  const video = document.getElementById("video");
+
+  if(Hls.isSupported()){
+
+    const hls = new Hls();
+
+    hls.loadSource(url);
+
+    hls.attachMedia(video);
+
+    hls.on(Hls.Events.MANIFEST_PARSED,function(){
+      video.play();
+    });
+
+  }
+
+  else if(video.canPlayType('application/vnd.apple.mpegurl')){
+
+    video.src = url;
+
+    video.play();
+
+  }
+
+}
+
+</script>
 
 </body>
 </html>
