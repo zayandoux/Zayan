@@ -1,252 +1,233 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel IPTV</title>
 
-<title>IPTV Local</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, sans-serif;
+    }
 
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    body{
+      background:#0f172a;
+      color:white;
+    }
 
-<style>
+    header{
+      background:#111827;
+      padding:20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:1px solid #1f2937;
+    }
 
-body{
-  margin:0;
-  background:#111;
-  color:white;
-  font-family:Arial;
-}
+    .logo{
+      font-size:24px;
+      font-weight:bold;
+      color:#22c55e;
+    }
 
-header{
-  padding:15px;
-  background:#1c1c1c;
-}
+    nav a{
+      color:white;
+      text-decoration:none;
+      margin-left:20px;
+      transition:0.3s;
+    }
 
-input{
-  padding:10px;
-}
+    nav a:hover{
+      color:#22c55e;
+    }
 
-.container{
-  display:flex;
-  height:90vh;
-}
+    .hero{
+      padding:80px 20px;
+      text-align:center;
+    }
 
-.sidebar{
-  width:250px;
-  overflow:auto;
-  background:#181818;
-}
+    .hero h1{
+      font-size:48px;
+      margin-bottom:20px;
+    }
 
-.category{
-  padding:15px;
-  border-bottom:1px solid #222;
-  cursor:pointer;
-}
+    .hero p{
+      color:#cbd5e1;
+      max-width:700px;
+      margin:auto;
+      line-height:1.6;
+    }
 
-.category:hover{
-  background:#222;
-}
+    .buttons{
+      margin-top:30px;
+    }
 
-.content{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-}
+    .buttons a{
+      display:inline-block;
+      padding:15px 30px;
+      border-radius:10px;
+      text-decoration:none;
+      margin:10px;
+      font-weight:bold;
+      transition:0.3s;
+    }
 
-video{
-  width:100%;
-  height:45%;
-  background:black;
-}
+    .btn-primary{
+      background:#22c55e;
+      color:black;
+    }
 
-.channels{
-  flex:1;
-  overflow:auto;
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:10px;
-  padding:10px;
-}
+    .btn-primary:hover{
+      background:#16a34a;
+    }
 
-.card{
-  background:#1f1f1f;
-  border-radius:10px;
-  overflow:hidden;
-  cursor:pointer;
-}
+    .btn-secondary{
+      border:1px solid #22c55e;
+      color:#22c55e;
+    }
 
-.card img{
-  width:100%;
-  height:120px;
-  object-fit:cover;
-}
+    .btn-secondary:hover{
+      background:#22c55e;
+      color:black;
+    }
 
-.card-title{
-  padding:10px;
-}
+    .plans{
+      padding:60px 20px;
+      display:flex;
+      justify-content:center;
+      gap:30px;
+      flex-wrap:wrap;
+    }
 
-</style>
+    .card{
+      background:#111827;
+      width:300px;
+      padding:30px;
+      border-radius:15px;
+      border:1px solid #1f2937;
+      transition:0.3s;
+    }
+
+    .card:hover{
+      transform:translateY(-5px);
+      border-color:#22c55e;
+    }
+
+    .card h2{
+      margin-bottom:15px;
+    }
+
+    .price{
+      font-size:36px;
+      color:#22c55e;
+      margin-bottom:20px;
+    }
+
+    .card ul{
+      list-style:none;
+      margin-bottom:25px;
+    }
+
+    .card ul li{
+      margin:10px 0;
+      color:#cbd5e1;
+    }
+
+    .card button{
+      width:100%;
+      padding:15px;
+      border:none;
+      border-radius:10px;
+      background:#22c55e;
+      color:black;
+      font-weight:bold;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .card button:hover{
+      background:#16a34a;
+    }
+
+    footer{
+      text-align:center;
+      padding:30px;
+      color:#94a3b8;
+      border-top:1px solid #1f2937;
+      margin-top:50px;
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
+  <header>
+    <div class="logo">MULTI IPTV</div>
 
-<input type="file" id="fileInput">
+    <nav>
+      <a href="#">Início</a>
+      <a href="#">Planos</a>
+      <a href="#">Teste</a>
+      <a href="#">Revenda</a>
+      <a href="#">Suporte</a>
+    </nav>
+  </header>
 
-</header>
+  <section class="hero">
+    <h1>Seu Painel IPTV Multiservidor</h1>
 
-<div class="container">
+    <p>
+      Trabalhe com créditos ilimitados, multiservidor,
+      suporte humanizado e estabilidade premium.
+    </p>
 
-<div class="sidebar" id="categories"></div>
+    <div class="buttons">
+      <a href="#" class="btn-primary">TESTE GRÁTIS</a>
 
-<div class="content">
+      <a href="#" class="btn-secondary">VER PLANOS</a>
+    </div>
+  </section>
 
-<video id="video" controls autoplay></video>
+  <section class="plans">
 
-<div class="channels" id="channels"></div>
+    <div class="card">
+      <h2>Mensal</h2>
 
-</div>
+      <div class="price">R$25</div>
 
-</div>
+      <ul>
+        <li>✔ 1 conexão</li>
+        <li>✔ Multiservidor</li>
+        <li>✔ Filmes e séries</li>
+        <li>✔ Suporte</li>
+      </ul>
 
-<script>
+      <button>ASSINAR</button>
+    </div>
 
-let grouped = {};
+    <div class="card">
+      <h2>Revenda</h2>
 
-document
-.getElementById("fileInput")
-.addEventListener("change", function(e){
+      <div class="price">R$120</div>
 
-  const file = e.target.files[0];
+      <ul>
+        <li>✔ Créditos ilimitados</li>
+        <li>✔ 14 estruturas</li>
+        <li>✔ Material divulgação</li>
+        <li>✔ Apps parceiros</li>
+      </ul>
 
-  const reader = new FileReader();
+      <button>QUERO REVENDER</button>
+    </div>
 
-  reader.onload = function(event){
+  </section>
 
-    parseM3U(event.target.result);
-
-  };
-
-  reader.readAsText(file);
-
-});
-
-function parseM3U(data){
-
-  grouped = {};
-
-  const lines = data.split('\n');
-
-  let current = {};
-
-  lines.forEach(line => {
-
-    line = line.trim();
-
-    if(line.startsWith("#EXTINF")){
-
-      const title = line.split(',').pop();
-
-      const logoMatch = line.match(/tvg-logo="(.*?)"/);
-
-      const groupMatch = line.match(/group-title="(.*?)"/);
-
-      current = {
-        title:title,
-        logo:logoMatch ? logoMatch[1] : '',
-        category:groupMatch ? groupMatch[1] : 'Outros'
-      };
-
-    }
-
-    else if(line.startsWith("http")){
-
-      current.url = line;
-
-      if(!grouped[current.category]){
-        grouped[current.category] = [];
-      }
-
-      grouped[current.category].push({...current});
-
-    }
-
-  });
-
-  renderCategories();
-
-}
-
-function renderCategories(){
-
-  const categories = document.getElementById("categories");
-
-  categories.innerHTML = "";
-
-  Object.keys(grouped).forEach(category => {
-
-    const div = document.createElement("div");
-
-    div.className = "category";
-
-    div.innerText = category;
-
-    div.onclick = () => renderChannels(category);
-
-    categories.appendChild(div);
-
-  });
-
-}
-
-function renderChannels(category){
-
-  const channels = document.getElementById("channels");
-
-  channels.innerHTML = "";
-
-  grouped[category].forEach(item => {
-
-    const card = document.createElement("div");
-
-    card.className = "card";
-
-    card.innerHTML = `
-      <img src="${item.logo || 'https://via.placeholder.com/300x120'}">
-      <div class="card-title">${item.title}</div>
-    `;
-
-    card.onclick = () => playVideo(item.url);
-
-    channels.appendChild(card);
-
-  });
-
-}
-
-function playVideo(url){
-
-  const video = document.getElementById("video");
-
-  if(Hls.isSupported()){
-
-    const hls = new Hls();
-
-    hls.loadSource(url);
-
-    hls.attachMedia(video);
-
-  }
-
-  else{
-
-    video.src = url;
-
-  }
-
-}
-
-</script>
+  <footer>
+    © 2026 Multi IPTV - Todos os direitos reservados
+  </footer>
 
 </body>
 </html>
