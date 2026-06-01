@@ -1,258 +1,213 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>NetPlay Streaming</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minha Dieta</title>
 <style>
-    *{
-        margin:0;
-        padding:0;
-        box-sizing:border-box;
-        font-family: Arial, Helvetica, sans-serif;
-    }
-
-    body{
-        background:#050505;
-        color:white;
-        overflow-x:hidden;
-    }
-
-    .container{
-        max-width:1200px;
-        margin:auto;
-        padding:20px;
-    }
-
-    .hero{
-        display:flex;
-        flex-wrap:wrap;
-        align-items:center;
-        justify-content:space-between;
-        gap:40px;
-        min-height:100vh;
-    }
-
-    .left{
-        flex:1;
-        min-width:300px;
-    }
-
-    .logo{
-        font-size:60px;
-        font-weight:900;
-        background:linear-gradient(90deg,#ff00cc,#7b2fff,#00cfff);
-        -webkit-background-clip:text;
-        -webkit-text-fill-color:transparent;
-        margin-bottom:20px;
-    }
-
-    .subtitle{
-        color:#ccc;
-        margin-bottom:30px;
-        font-size:18px;
-    }
-
-    h1{
-        font-size:65px;
-        line-height:1;
-        margin-bottom:20px;
-    }
-
-    h1 span{
-        background:linear-gradient(90deg,#ff00cc,#7b2fff,#00cfff);
-        -webkit-background-clip:text;
-        -webkit-text-fill-color:transparent;
-    }
-
-    .benefits{
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-        gap:20px;
-        margin-top:40px;
-    }
-
-    .card{
-        border:1px solid #7b2fff;
-        padding:20px;
-        border-radius:18px;
-        background:#0d0d0d;
-        box-shadow:0 0 20px rgba(123,47,255,0.2);
-    }
-
-    .card h3{
-        color:#ff00cc;
-        margin-bottom:10px;
-        font-size:24px;
-    }
-
-    .card p{
-        color:#d7d7d7;
-        line-height:1.5;
-    }
-
-    .right{
-        flex:1;
-        text-align:center;
-        min-width:300px;
-    }
-
-    .price-box{
-        margin-top:30px;
-        border:2px solid #7b2fff;
-        border-radius:20px;
-        padding:30px;
-        background:#0d0d0d;
-        box-shadow:0 0 30px rgba(255,0,204,0.3);
-    }
-
-    .price-box h2{
-        font-size:28px;
-        margin-bottom:10px;
-    }
-
-    .price{
-        font-size:70px;
-        font-weight:900;
-        background:linear-gradient(90deg,#ff00cc,#ff6600,#00cfff);
-        -webkit-background-clip:text;
-        -webkit-text-fill-color:transparent;
-    }
-
-    .whatsapp-btn{
-        display:inline-flex;
-        align-items:center;
-        gap:12px;
-        margin-top:35px;
-        background:#25D366;
-        color:white;
-        text-decoration:none;
-        padding:18px 35px;
-        border-radius:50px;
-        font-size:22px;
-        font-weight:bold;
-        transition:0.3s;
-    }
-
-    .whatsapp-btn:hover{
-        transform:scale(1.05);
-        box-shadow:0 0 20px rgba(37,211,102,0.5);
-    }
-
-    .whatsapp-icon{
-        width:30px;
-        height:30px;
-    }
-
-    .footer{
-        text-align:center;
-        padding:40px 20px;
-        color:#888;
-        font-size:14px;
-    }
-
-    @media(max-width:768px){
-
-        h1{
-            font-size:42px;
-        }
-
-        .logo{
-            font-size:45px;
-        }
-
-        .price{
-            font-size:50px;
-        }
-    }
-
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    margin:0;
+    padding:20px;
+}
+.container{
+    max-width:800px;
+    margin:auto;
+}
+h1{
+    text-align:center;
+    color:#333;
+}
+.card{
+    background:#fff;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+.card.done{
+    background:#d4edda;
+}
+.card h2{
+    margin-top:0;
+}
+label{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    font-size:18px;
+}
+input[type=checkbox]{
+    width:22px;
+    height:22px;
+}
+.progress{
+    background:#ddd;
+    height:25px;
+    border-radius:20px;
+    overflow:hidden;
+    margin-bottom:20px;
+}
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:#28a745;
+    transition:.3s;
+}
+.info{
+    text-align:center;
+    margin-bottom:20px;
+    font-weight:bold;
+}
+button{
+    width:100%;
+    border:none;
+    background:#dc3545;
+    color:#fff;
+    padding:12px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+}
 </style>
 </head>
-
 <body>
-
 <div class="container">
-
-    <section class="hero">
-
-        <div class="left">
-
-            <div class="logo">NETPLAY+</div>
-
-            <p class="subtitle">
-                A melhor experiência em entretenimento digital.
-            </p>
-
-            <h1>
-                PAINEL <span>ILIMITADO</span><br>
-                MULTISERVIDOR
-            </h1>
-
-            <div class="benefits">
-
-                <div class="card">
-                    <h3>11 Estruturas</h3>
-                    <p>
-                        Estruturas completas e otimizadas para melhor estabilidade e desempenho.
-                    </p>
-                </div>
-
-                <div class="card">
-                    <h3>Multiservidor</h3>
-                    <p>
-                        Troque de servidor quando quiser e tenha muito menos travamentos.
-                    </p>
-                </div>
-
-                <div class="card">
-                    <h3>Materiais</h3>
-                    <p>
-                        Artes, banners, vídeos e textos prontos para divulgar e vender mais.
-                    </p>
-                </div>
-
-                <div class="card">
-                    <h3>Suporte</h3>
-                    <p>
-                        Atendimento rápido e suporte especializado para ajudar sempre que precisar.
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="right">
-
-            <div class="price-box">
-
-                <h2>Mensalidade</h2>
-
-                <div class="price">R$ 200</div>
-
-                <a class="whatsapp-btn" 
-                   href="https://wa.me/5512996837180" 
-                   target="_blank">
-
-                    <svg class="whatsapp-icon" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24">
-                        <path d="M20.52 3.48A11.78 11.78 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.15 1.6 5.96L0 24l6.32-1.65a11.9 11.9 0 0 0 5.74 1.46h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.17-3.45-8.43zM12.07 21.3h-.01a9.36 9.36 0 0 1-4.77-1.3l-.34-.2-3.75.98 1-3.66-.22-.38a9.33 9.33 0 0 1-1.43-4.95c0-5.16 4.2-9.36 9.37-9.36 2.5 0 4.84.97 6.6 2.74a9.28 9.28 0 0 1 2.74 6.6c0 5.17-4.2 9.37-9.36 9.37zm5.14-6.98c-.28-.14-1.65-.81-1.9-.9-.25-.09-.43-.14-.62.14-.18.28-.71.9-.87 1.08-.16.18-.31.21-.59.07-.28-.14-1.17-.43-2.22-1.37-.82-.73-1.37-1.63-1.53-1.9-.16-.28-.02-.43.12-.57.13-.13.28-.34.42-.5.14-.16.18-.28.28-.47.09-.18.05-.35-.02-.5-.07-.14-.62-1.5-.84-2.05-.22-.53-.45-.46-.62-.47h-.53c-.18 0-.47.07-.71.35-.25.28-.96.93-.96 2.27 0 1.34.98 2.63 1.12 2.81.14.18 1.92 2.93 4.65 4.11.65.28 1.15.45 1.55.58.65.2 1.24.17 1.7.1.52-.08 1.65-.67 1.88-1.31.23-.64.23-1.18.16-1.3-.07-.11-.25-.18-.53-.32z"/>
-                    </svg>
-
-                    Chamar no WhatsApp
-                </a>
-
-            </div>
-
-        </div>
-
-    </section>
-
+<h1>💪 Minha Dieta</h1>
+<div class="info">
+Meta diária: 2300 kcal
 </div>
-
-<div class="footer">
-    © 2026 NetPlay+ • Sem limites para crescer.
+<div class="progress">
+    <div class="progress-bar" id="progress"></div>
 </div>
-
+<div class="card">
+<label>
+<input type="checkbox" id="cafe">
+☀️ Café da manhã
+</label>
+<ul>
+<li>250ml leite desnatado</li>
+<li>1 colher cacau 100%</li>
+<li>5g creatina</li>
+<li>½ mamão</li>
+<li>3 ovos</li>
+<li>50g aveia</li>
+</ul>
+</div>
+<div class="card">
+<label>
+<input type="checkbox" id="almoco">
+🍽️ Almoço / Pré-treino
+</label>
+<ul>
+<li>150g frango</li>
+<li>150g arroz</li>
+<li>100g feijão</li>
+<li>Salada</li>
+<li>1 colher azeite</li>
+</ul>
+</div>
+<div class="card">
+<label>
+<input type="checkbox" id="treino">
+🏋️ Treino
+</label>
+</div>
+<div class="card">
+<label>
+<input type="checkbox" id="pos">
+🍌 Pós-treino
+</label>
+<ul>
+<li>1 banana</li>
+<li>1 iogurte desnatado</li>
+<li>30g aveia</li>
+<li>1 dose whey</li>
+</ul>
+</div>
+<div class="card">
+<label>
+<input type="checkbox" id="jantar">
+🌙 Jantar
+</label>
+<ul>
+<li>150g frango</li>
+<li>2 fatias pão integral</li>
+<li>Salada</li>
+</ul>
+</div>
+<div class="card">
+<label>
+<input type="checkbox" id="ceia">
+🌜 Ceia
+</label>
+<ul>
+<li>200ml leite desnatado</li>
+</ul>
+</div>
+<button onclick="resetar()">🔄 Reiniciar Dia</button>
+</div>
+<script>
+const itens = [
+'cafe',
+'almoco',
+'treino',
+'pos',
+'jantar',
+'ceia'
+];
+function salvar(){
+    itens.forEach(id=>{
+        localStorage.setItem(id,
+            document.getElementById(id).checked
+        );
+    });
+    atualizar();
+}
+function carregar(){
+    itens.forEach(id=>{
+        const valor = localStorage.getItem(id);
+        if(valor === "true"){
+            document.getElementById(id).checked = true;
+        }
+    });
+    atualizar();
+}
+function atualizar(){
+    let feitos = 0;
+    itens.forEach(id=>{
+        const checkbox = document.getElementById(id);
+        if(checkbox.checked){
+            feitos++;
+            checkbox.closest('.card')
+                .classList.add('done');
+        }else{
+            checkbox.closest('.card')
+                .classList.remove('done');
+        }
+    });
+    const porcentagem = (feitos / itens.length) * 100;
+    document.getElementById('progress')
+        .style.width = porcentagem + "%";
+}
+function resetar(){
+    if(confirm("Reiniciar progresso do dia?")){
+        itens.forEach(id=>{
+            localStorage.removeItem(id);
+            document.getElementById(id).checked = false;
+        });
+        atualizar();
+    }
+}
+itens.forEach(id=>{
+    document
+        .getElementById(id)
+        .addEventListener('change', salvar);
+});
+carregar();
+</script>
 </body>
 </html>
+`
