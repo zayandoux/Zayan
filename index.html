@@ -95,6 +95,11 @@ label{
     gap:10px;
     font-size:18px;
 }
+small{
+    margin-left:auto;
+    color:#aaa;
+    font-size:14px;
+}
 ul{
     margin-bottom:0;
 }
@@ -182,6 +187,7 @@ Salvar Peso
 <label>
 <input type="checkbox" id="cafe">
 ☀️ Café da manhã
+<small>08:00</small>
 </label>
 <ul>
 <li>250ml leite desnatado</li>
@@ -196,6 +202,7 @@ Salvar Peso
 <label>
 <input type="checkbox" id="almoco">
 🍽️ Almoço / Pré-Treino
+<small>12:00</small>
 </label>
 <ul>
 <li>150g frango</li>
@@ -208,13 +215,15 @@ Salvar Peso
 <div class="card refeicao">
 <label>
 <input type="checkbox" id="treino">
-🏋️ Treino
+🏋️ Academia
+<small>13:00</small>
 </label>
 </div>
 <div class="card refeicao">
 <label>
 <input type="checkbox" id="pos">
 🍌 Pós-Treino
+<small>15:00</small>
 </label>
 <ul>
 <li>Banana</li>
@@ -227,6 +236,7 @@ Salvar Peso
 <label>
 <input type="checkbox" id="jantar">
 🌙 Jantar
+<small>19:00</small>
 </label>
 <ul>
 <li>150g frango</li>
@@ -238,9 +248,10 @@ Salvar Peso
 <label>
 <input type="checkbox" id="ceia">
 🌜 Ceia
+<small>22:00</small>
 </label>
 <ul>
-<li>200ml leite desnatado</li>
+<li>200ml leite desnatado + cacau 100%</li>
 </ul>
 </div>
 <button onclick="resetDia()">
