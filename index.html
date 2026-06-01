@@ -3,86 +3,182 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minha Dieta</title>
+<title>Minha Jornada Fitness</title>
 <style>
+*{box-sizing:border-box}
 body{
-    font-family: Arial, sans-serif;
-    background:#f4f6f9;
     margin:0;
+    font-family:Arial,sans-serif;
+    background:#121212;
+    color:#fff;
+}
+header{
+    text-align:center;
     padding:20px;
+    background:#1f1f1f;
+    position:sticky;
+    top:0;
 }
 .container{
-    max-width:800px;
+    max-width:900px;
     margin:auto;
-}
-h1{
-    text-align:center;
-    color:#333;
+    padding:15px;
 }
 .card{
-    background:#fff;
+    background:#1f1f1f;
     border-radius:15px;
     padding:15px;
     margin-bottom:15px;
-    box-shadow:0 2px 8px rgba(0,0,0,.1);
 }
 .card.done{
-    background:#d4edda;
+    border:2px solid #4caf50;
 }
-.card h2{
+h1,h2,h3{
     margin-top:0;
+}
+input[type=number]{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:10px;
+    margin-top:5px;
+}
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    margin-top:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
+.btn{
+    background:#4caf50;
+    color:white;
+}
+.btn-water{
+    width:auto;
+    margin-right:5px;
+}
+.progress{
+    width:100%;
+    height:22px;
+    background:#333;
+    border-radius:20px;
+    overflow:hidden;
+}
+.progress-bar{
+    height:100%;
+    width:0%;
+    transition:.4s;
+}
+.green{
+    background:#4caf50;
+}
+.blue{
+    background:#2196f3;
+}
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:10px;
+}
+.stat{
+    background:#2b2b2b;
+    padding:10px;
+    border-radius:10px;
+    text-align:center;
 }
 label{
     display:flex;
     align-items:center;
     gap:10px;
-    cursor:pointer;
     font-size:18px;
 }
-input[type=checkbox]{
-    width:22px;
-    height:22px;
+ul{
+    margin-bottom:0;
 }
-.progress{
-    background:#ddd;
-    height:25px;
-    border-radius:20px;
-    overflow:hidden;
-    margin-bottom:20px;
+.tab{
+    display:none;
 }
-.progress-bar{
-    height:100%;
-    width:0%;
-    background:#28a745;
-    transition:.3s;
+.tab.active{
+    display:block;
 }
-.info{
-    text-align:center;
-    margin-bottom:20px;
-    font-weight:bold;
+.nav{
+    display:flex;
+    gap:5px;
+    margin-bottom:15px;
 }
-button{
+.nav button{
+    margin:0;
+}
+table{
     width:100%;
-    border:none;
-    background:#dc3545;
-    color:#fff;
-    padding:12px;
-    border-radius:10px;
-    cursor:pointer;
-    font-size:16px;
+    border-collapse:collapse;
+}
+th,td{
+    border:1px solid #333;
+    padding:8px;
+    text-align:center;
 }
 </style>
 </head>
 <body>
+<header>
+<h1>💪 Minha Jornada Fitness</h1>
+</header>
 <div class="container">
-<h1>💪 Minha Dieta</h1>
-<div class="info">
-Meta diária: 2300 kcal
+<div class="nav">
+<button onclick="showTab('dashboard')">🏠 Dashboard</button>
+<button onclick="showTab('dieta')">🍽️ Dieta</button>
+<button onclick="showTab('agua')">💧 Água</button>
+<button onclick="showTab('evolucao')">📈 Evolução</button>
 </div>
+<div id="dashboard" class="tab active">
+<div class="card">
+<h2>📊 Resumo</h2>
+<div class="stats">
+<div class="stat">
+<h3 id="pesoAtual">86 kg</h3>
+<small>Peso Atual</small>
+</div>
+<div class="stat">
+<h3>70 kg</h3>
+<small>Meta</small>
+</div>
+<div class="stat">
+<h3>2300</h3>
+<small>Calorias</small>
+</div>
+<div class="stat">
+<h3>170g</h3>
+<small>Proteína</small>
+</div>
+</div>
+<br>
+<h3>Progresso até a meta</h3>
 <div class="progress">
-    <div class="progress-bar" id="progress"></div>
+<div class="progress-bar green" id="pesoBar"></div>
+</div>
+<p id="faltam"></p>
 </div>
 <div class="card">
+<h2>⚖️ Registrar Peso</h2>
+<input type="number" id="novoPeso" step="0.1" placeholder="Ex: 85.5">
+<button class="btn" onclick="salvarPeso()">
+Salvar Peso
+</button>
+</div>
+</div>
+<div id="dieta" class="tab">
+<div class="card">
+<h2>🍽️ Dieta do Dia</h2>
+<div id="dietProgressText"></div>
+<div class="progress">
+<div class="progress-bar green" id="dietProgress"></div>
+</div>
+</div>
+<div class="card refeicao">
 <label>
 <input type="checkbox" id="cafe">
 ☀️ Café da manhã
@@ -96,10 +192,10 @@ Meta diária: 2300 kcal
 <li>50g aveia</li>
 </ul>
 </div>
-<div class="card">
+<div class="card refeicao">
 <label>
 <input type="checkbox" id="almoco">
-🍽️ Almoço / Pré-treino
+🍽️ Almoço / Pré-Treino
 </label>
 <ul>
 <li>150g frango</li>
@@ -109,25 +205,25 @@ Meta diária: 2300 kcal
 <li>1 colher azeite</li>
 </ul>
 </div>
-<div class="card">
+<div class="card refeicao">
 <label>
 <input type="checkbox" id="treino">
 🏋️ Treino
 </label>
 </div>
-<div class="card">
+<div class="card refeicao">
 <label>
 <input type="checkbox" id="pos">
-🍌 Pós-treino
+🍌 Pós-Treino
 </label>
 <ul>
-<li>1 banana</li>
-<li>1 iogurte desnatado</li>
+<li>Banana</li>
+<li>Iogurte</li>
 <li>30g aveia</li>
 <li>1 dose whey</li>
 </ul>
 </div>
-<div class="card">
+<div class="card refeicao">
 <label>
 <input type="checkbox" id="jantar">
 🌙 Jantar
@@ -138,7 +234,7 @@ Meta diária: 2300 kcal
 <li>Salada</li>
 </ul>
 </div>
-<div class="card">
+<div class="card refeicao">
 <label>
 <input type="checkbox" id="ceia">
 🌜 Ceia
@@ -147,10 +243,48 @@ Meta diária: 2300 kcal
 <li>200ml leite desnatado</li>
 </ul>
 </div>
-<button onclick="resetar()">🔄 Reiniciar Dia</button>
+<button onclick="resetDia()">
+🔄 Reiniciar Dia
+</button>
+</div>
+<div id="agua" class="tab">
+<div class="card">
+<h2>💧 Água</h2>
+<h3 id="aguaTexto">0 / 3000 ml</h3>
+<div class="progress">
+<div class="progress-bar blue" id="aguaBar"></div>
+</div>
+<br>
+<button class="btn-water" onclick="addAgua(250)">
++250 ml
+</button>
+<button class="btn-water" onclick="addAgua(500)">
++500 ml
+</button>
+<button class="btn-water" onclick="zerarAgua()">
+Zerar
+</button>
+</div>
+</div>
+<div id="evolucao" class="tab">
+<div class="card">
+<h2>📈 Histórico de Peso</h2>
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Peso</th>
+</tr>
+</thead>
+<tbody id="historico"></tbody>
+</table>
+</div>
+</div>
 </div>
 <script>
-const itens = [
+const META=70;
+const PESO_INICIAL=86;
+const checks=[
 'cafe',
 'almoco',
 'treino',
@@ -158,56 +292,156 @@ const itens = [
 'jantar',
 'ceia'
 ];
-function salvar(){
-    itens.forEach(id=>{
-        localStorage.setItem(id,
-            document.getElementById(id).checked
-        );
-    });
-    atualizar();
+function showTab(id){
+document.querySelectorAll('.tab')
+.forEach(t=>t.classList.remove('active'));
+document.getElementById(id)
+.classList.add('active');
 }
-function carregar(){
-    itens.forEach(id=>{
-        const valor = localStorage.getItem(id);
-        if(valor === "true"){
-            document.getElementById(id).checked = true;
-        }
-    });
-    atualizar();
+function atualizarPeso(){
+let peso=parseFloat(
+localStorage.getItem('pesoAtual')
+||PESO_INICIAL
+);
+document.getElementById('pesoAtual')
+.innerText=peso+' kg';
+let perdido=PESO_INICIAL-peso;
+let total=PESO_INICIAL-META;
+let pct=Math.max(
+0,
+Math.min(100,(perdido/total)*100)
+);
+document.getElementById('pesoBar')
+.style.width=pct+'%';
+document.getElementById('faltam')
+.innerText=
+'Faltam '+(peso-META).toFixed(1)+' kg para a meta';
 }
-function atualizar(){
-    let feitos = 0;
-    itens.forEach(id=>{
-        const checkbox = document.getElementById(id);
-        if(checkbox.checked){
-            feitos++;
-            checkbox.closest('.card')
-                .classList.add('done');
-        }else{
-            checkbox.closest('.card')
-                .classList.remove('done');
-        }
-    });
-    const porcentagem = (feitos / itens.length) * 100;
-    document.getElementById('progress')
-        .style.width = porcentagem + "%";
-}
-function resetar(){
-    if(confirm("Reiniciar progresso do dia?")){
-        itens.forEach(id=>{
-            localStorage.removeItem(id);
-            document.getElementById(id).checked = false;
-        });
-        atualizar();
-    }
-}
-itens.forEach(id=>{
-    document
-        .getElementById(id)
-        .addEventListener('change', salvar);
+function salvarPeso(){
+let peso=
+document.getElementById('novoPeso').value;
+if(!peso)return;
+localStorage.setItem(
+'pesoAtual',
+peso
+);
+let hist=
+JSON.parse(
+localStorage.getItem('historico')
+||'[]'
+);
+hist.unshift({
+data:new Date().toLocaleDateString(),
+peso:peso
 });
-carregar();
+localStorage.setItem(
+'historico',
+JSON.stringify(hist)
+);
+document.getElementById('novoPeso').value='';
+atualizarPeso();
+carregarHistorico();
+}
+function carregarHistorico(){
+let hist=
+JSON.parse(
+localStorage.getItem('historico')
+||'[]'
+);
+let html='';
+hist.forEach(item=>{
+html+=`
+<tr>
+<td>${item.data}</td>
+<td>${item.peso} kg</td>
+</tr>
+`;
+});
+document.getElementById('historico')
+.innerHTML=html;
+}
+function salvarCheck(){
+checks.forEach(id=>{
+localStorage.setItem(
+id,
+document.getElementById(id).checked
+);
+});
+atualizarDieta();
+}
+function atualizarDieta(){
+let feitos=0;
+checks.forEach(id=>{
+let cb=
+document.getElementById(id);
+let card=
+cb.closest('.card');
+if(cb.checked){
+feitos++;
+card.classList.add('done');
+}else{
+card.classList.remove('done');
+}
+});
+let pct=(feitos/checks.length)*100;
+document.getElementById('dietProgress')
+.style.width=pct+'%';
+document.getElementById('dietProgressText')
+.innerText=
+`${feitos}/${checks.length} concluídos`;
+}
+function carregarChecks(){
+checks.forEach(id=>{
+document.getElementById(id).checked=
+localStorage.getItem(id)==='true';
+document.getElementById(id)
+.addEventListener('change',salvarCheck);
+});
+atualizarDieta();
+}
+function addAgua(valor){
+let agua=parseInt(
+localStorage.getItem('agua')
+||0
+);
+agua+=valor;
+localStorage.setItem('agua',agua);
+atualizarAgua();
+}
+function zerarAgua(){
+localStorage.setItem('agua',0);
+atualizarAgua();
+}
+function atualizarAgua(){
+let agua=parseInt(
+localStorage.getItem('agua')
+||0
+);
+document.getElementById('aguaTexto')
+.innerText=
+agua+' / 3000 ml';
+let pct=Math.min(
+100,
+(agua/3000)*100
+);
+document.getElementById('aguaBar')
+.style.width=pct+'%';
+}
+function resetDia(){
+if(confirm('Reiniciar o dia?')){
+checks.forEach(id=>{
+localStorage.removeItem(id);
+document.getElementById(id).checked=false;
+});
+localStorage.setItem('agua',0);
+atualizarAgua();
+atualizarDieta();
+}
+}
+atualizarPeso();
+carregarHistorico();
+carregarChecks();
+atualizarAgua();
 </script>
 </body>
-</html>
-`
+</html
